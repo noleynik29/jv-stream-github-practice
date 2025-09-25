@@ -1,5 +1,6 @@
 package practice;
 
+import java.util.Arrays;
 import java.util.function.Predicate;
 import model.Candidate;
 
@@ -25,22 +26,19 @@ public class CandidateValidator implements Predicate<Candidate> {
         if (candidate.getPeriodsInUkr() == null || candidate.getPeriodsInUkr().isBlank()) {
             return false;
         }
-        String[] periods = candidate.getPeriodsInUkr().split(",");
-        int totalYears = 0;
-        for (String period : periods) {
-            String[] years = period.trim().split("-");
-            if (years.length != 2) {
-                return false;
-            }
-            try {
-                int fromYear = Integer.parseInt(years[0].trim());
-                int toYear = Integer.parseInt(years[1].trim());
-                totalYears += (toYear - fromYear + 1);
-            } catch (NumberFormatException e) {
-                return false;
-            }
-        }
-
-        return totalYears >= MIN_YEARS_IN_UKR;
+        return Arrays.stream(candidate.getPeriodsInUkr().split(","))
+                .map(String::trim)
+                .map(period -> period.split("-"))
+                .filter(years -> years.length == 2)
+                .map(years -> {
+                    try {
+                        int fromYear = Integer.parseInt(years[0].trim());
+                        int toYear = Integer.parseInt(years[1].trim());
+                        return toYear - fromYear;
+                    } catch (NumberFormatException e) {
+                        return -1; // некорректный период
+                    }
+                })
+                .anyMatch(duration -> duration >= MIN_YEARS_IN_UKR);
     }
 }
