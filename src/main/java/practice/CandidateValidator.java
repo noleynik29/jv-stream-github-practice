@@ -38,3 +38,4 @@ public class CandidateValidator implements Predicate<Candidate> {
                 .anyMatch(duration -> duration >= MIN_YEARS_IN_UKR);
     }
 }
+
