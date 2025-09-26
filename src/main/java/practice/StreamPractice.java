@@ -51,7 +51,7 @@ public class StreamPractice {
         return peopleList.stream()
                 .filter(p -> p.getSex() == Person.Sex.MAN)
                 .filter(p -> p.getAge() >= fromAge && p.getAge() <= toAge)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -70,7 +70,7 @@ public class StreamPractice {
                 .filter(p -> p.getAge() >= fromAge)
                 .filter(p -> (p.getSex() == Person.Sex.MAN && p.getAge() <= maleToAge)
                         || (p.getSex() == Person.Sex.WOMAN && p.getAge() <= femaleToAge))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     /**
@@ -83,7 +83,7 @@ public class StreamPractice {
                 .filter(p -> p.getSex() == Person.Sex.WOMAN && p.getAge() >= femaleAge)
                 .flatMap(p -> p.getCats().stream())
                 .map(cat -> cat.getName())
-                .collect(Collectors.toList());
+                .toList();
     }
     /**
      * Your help with a election is needed. Given list of candidates, where each element
@@ -103,6 +103,6 @@ public class StreamPractice {
                 .filter(new CandidateValidator())
                 .map(Candidate::getName)
                 .sorted(Comparator.naturalOrder())
-                .collect(Collectors.toList());
+                .toList();
     }
 }

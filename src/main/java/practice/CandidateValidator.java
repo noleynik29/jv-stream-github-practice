@@ -11,18 +11,14 @@ public class CandidateValidator implements Predicate<Candidate> {
 
     @Override
     public boolean test(Candidate candidate) {
-        if (candidate == null) {
-            return false;
-        }
-        if (candidate.getAge() < MIN_AGE) {
-            return false;
-        }
-        if (!candidate.isAllowedToVote()) {
-            return false;
-        }
-        if (!REQUIRED_NATIONALITY.equals(candidate.getNationality())) {
-            return false;
-        }
+        return candidate != null
+                && candidate.getAge() >= MIN_AGE
+                && candidate.isAllowedToVote()
+                && REQUIRED_NATIONALITY.equals(candidate.getNationality())
+                && hasLivedEnough(candidate);
+    }
+
+    private boolean hasLivedEnough(Candidate candidate) {
         if (candidate.getPeriodsInUkr() == null || candidate.getPeriodsInUkr().isBlank()) {
             return false;
         }
@@ -36,7 +32,7 @@ public class CandidateValidator implements Predicate<Candidate> {
                         int toYear = Integer.parseInt(years[1].trim());
                         return toYear - fromYear;
                     } catch (NumberFormatException e) {
-                        return -1; // некорректный период
+                        return -1;
                     }
                 })
                 .anyMatch(duration -> duration >= MIN_YEARS_IN_UKR);
